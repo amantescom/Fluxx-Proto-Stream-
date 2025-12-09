@@ -1,3 +1,5 @@
+
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MediaItem, UserStats, User, Transaction, Product, MediaType, CartItem, SystemSettings, Ticket } from './types';
 import { MOCK_USERS, RADIO_STATIONS, MOCK_PRODUCTS, VIDEOS as INITIAL_VIDEOS, AUDIOS as INITIAL_AUDIOS } from './constants';
@@ -15,6 +17,7 @@ interface AppContextType {
   processMediaReward: (media: MediaItem) => void;
   unlockShop: () => boolean;
   buyProduct: (product: Product) => boolean;
+  checkoutCart: (totalAmount: number) => boolean;
   handleInteraction: (type: 'like' | 'share' | 'comment') => void;
   toggleFavorite: (id: string) => void;
   darkMode: boolean;
@@ -242,6 +245,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return false;
   };
 
+  const checkoutCart = (totalAmount: number): boolean => {
+     if (userStats.protoStreamBalance >= totalAmount) {
+        const itemNames = cart.map(i => i.name).join(', ');
+        setUserStats(prev => ({
+           ...prev,
+           protoStreamBalance: prev.protoStreamBalance - totalAmount,
+           transactions: [
+              { id: `t-cart-${Date.now()}`, type: 'PURCHASE', amount: totalAmount, description: `Checkout Carrinho: ${cart.length} itens`, date: new Date().toISOString() },
+              ...prev.transactions
+           ]
+        }));
+        
+        // Simular vendas para os vendedores (simplificado para o mock)
+        // Em um app real, distribuiria os valores.
+        
+        setCart([]); // Limpa o carrinho
+        return true;
+     }
+     return false;
+  };
+
   const addProduct = (newProduct: Omit<Product, 'id' | 'rating'>): boolean => {
     if (userStats.protoStreamBalance < systemSettings.adCost) return false;
     
@@ -409,7 +433,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider value={{
       activeMedia, isPlaying, playMedia, togglePlay, closePlayer,
       userStats, addPoints, earnProtoStream, processMediaReward,
-      unlockShop, buyProduct, handleInteraction, toggleFavorite,
+      unlockShop, buyProduct, checkoutCart, handleInteraction, toggleFavorite,
       darkMode, toggleTheme,
       systemSettings, updateSystemSettings,
       users, addUser, updateUser, deleteUser, adminAdjustBalance,

@@ -250,6 +250,7 @@ export const MOCK_PRODUCTS: Product[] = [
       rating: 4,
       contactInfo: '+55 48 99999-9999 | joao@email.com'
     },
+    pickupAddress: 'Rua das Flores, 123, Centro, Criciúma - SC',
     type: 'Physical',
     isNew: true
   },
@@ -268,6 +269,7 @@ export const MOCK_PRODUCTS: Product[] = [
       rating: 5,
       contactInfo: 'support@fluxx.com'
     },
+    pickupAddress: 'Digital Delivery (E-mail)',
     type: 'Digital' 
   },
   { 
@@ -285,6 +287,7 @@ export const MOCK_PRODUCTS: Product[] = [
       rating: 4.5,
       contactInfo: 'alice@music.com'
     },
+    pickupAddress: 'Online via Zoom',
     type: 'Service' 
   },
   { 
@@ -302,6 +305,7 @@ export const MOCK_PRODUCTS: Product[] = [
       rating: 3,
       contactInfo: 'djcool@beat.com'
     },
+    pickupAddress: 'Download Link',
     type: 'Digital' 
   },
 ];

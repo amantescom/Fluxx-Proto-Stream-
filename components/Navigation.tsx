@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Home, Video, Radio, Music, ShoppingBag, Shield, Users, Wallet, LayoutDashboard, Film, Lock, Tv2 } from './Icons';
@@ -56,20 +57,6 @@ export const Sidebar: React.FC = () => {
             <span className="font-medium">Carteira</span>
           </NavLink>
 
-          <NavLink
-            to="/channel"
-            className={({ isActive }) =>
-              `flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                isActive
-                  ? 'bg-gray-800 text-white dark:bg-white dark:text-gray-900'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`
-            }
-          >
-            <Tv2 size={20} />
-            <span className="font-medium">Canal</span>
-          </NavLink>
-
            <NavLink
             to="/admin/dashboard"
             className={({ isActive }) =>
@@ -95,7 +82,7 @@ export const Sidebar: React.FC = () => {
             <p className="text-sm font-semibold dark:text-white">CANAL</p>
             <p className="text-xs text-brand-500 font-bold">{userStats.protoStreamBalance} PTS</p>
           </div>
-        NavLink>
+        </NavLink>
       </div>
     </div>
   );
@@ -118,17 +105,6 @@ export const MobileNav: React.FC = () => {
             <span className="text-[10px] font-bold">{item.label}</span>
           </NavLink>
       ))}
-      <NavLink
-            to="/channel"
-            className={({ isActive }) =>
-              `flex flex-col items-center justify-center space-y-1 p-2 rounded-lg ${
-                isActive ? 'text-brand-500' : 'text-gray-400 dark:text-gray-500'
-              }`
-            }
-          >
-            <Tv2 size={24} />
-            <span className="text-[10px] font-bold">Canal</span>
-      </NavLink>
       <NavLink
             to="/profile"
             className={({ isActive }) =>

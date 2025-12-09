@@ -97,6 +97,7 @@ export interface Product {
     rating: number;
     contactInfo: string; // Phone/Email (Hidden until unlocked)
   };
+  pickupAddress: string; // Endereço de coleta informado pelo vendedor
   type: 'Digital' | 'Physical' | 'Service';
   isNew?: boolean;
   soldCount?: number;
@@ -105,6 +106,15 @@ export interface Product {
 
 export interface CartItem extends Product {
   cartId: string;
+}
+
+export interface ShippingAddress {
+  street: string;
+  number: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  complement?: string;
 }
 
 // Admin System Types

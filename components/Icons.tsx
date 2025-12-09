@@ -1,3 +1,4 @@
+
 import { 
   Home, 
   Tv, 
@@ -62,7 +63,9 @@ import {
   BarChart2,
   AlertTriangle,
   DollarSign,
-  Clock
+  Clock,
+  ArrowRight,
+  Truck
 } from 'lucide-react';
 
 export { 
@@ -77,5 +80,7 @@ export {
   BarChart2,
   AlertTriangle,
   DollarSign,
-  Clock
+  Clock,
+  ArrowRight,
+  Truck
 };

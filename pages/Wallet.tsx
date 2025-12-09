@@ -62,7 +62,7 @@ export const Wallet: React.FC = () => {
     <div className="pb-24 max-w-6xl mx-auto px-4">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <div className="p-4 bg-emerald-500 rounded-2xl shadow-lg shadow-emerald-500/30 text-white">
+        <div className="p-4 bg-brand-500 rounded-2xl shadow-lg shadow-brand-500/30 text-white">
             <WalletIcon size={32} />
         </div>
         <div>
@@ -73,8 +73,8 @@ export const Wallet: React.FC = () => {
 
       {/* Main Balances */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Total Balance Card (Always Green/Emerald for Money) */}
-        <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
+        {/* Total Balance Card (Brand/Money Green) */}
+        <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
             <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4 opacity-80">
                     <Coins size={20} />
@@ -91,13 +91,13 @@ export const Wallet: React.FC = () => {
                 <div className="flex gap-3">
                     <button 
                         onClick={() => setShowDeposit(true)}
-                        className="bg-white text-emerald-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg flex items-center gap-2"
+                        className="bg-white text-brand-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg flex items-center gap-2"
                     >
                         <Plus size={18} /> Adicionar
                     </button>
                     <button 
                         onClick={() => setShowExchange(true)}
-                        className="bg-emerald-900/50 text-white border border-white/20 px-6 py-3 rounded-xl font-bold hover:bg-emerald-900/70 transition flex items-center gap-2"
+                        className="bg-brand-900/50 text-white border border-white/20 px-6 py-3 rounded-xl font-bold hover:bg-brand-900/70 transition flex items-center gap-2"
                     >
                         <LayoutDashboard size={18} /> Converter
                     </button>
@@ -167,7 +167,7 @@ export const Wallet: React.FC = () => {
       <div className="bg-white dark:bg-dark-card rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
             <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                <TrendingUp className="text-emerald-500" /> Histórico de Transações
+                <TrendingUp className="text-brand-500" /> Histórico de Transações
             </h3>
         </div>
         <div className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -177,7 +177,7 @@ export const Wallet: React.FC = () => {
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-full ${
                                 t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE'
-                                ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' 
+                                ? 'bg-brand-100 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400' 
                                 : t.type === 'EXCHANGE'
                                 ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
                                 : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
@@ -191,7 +191,7 @@ export const Wallet: React.FC = () => {
                         </div>
                         <div className="text-right">
                             <span className={`text-lg font-bold ${
-                                t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'
+                                t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? 'text-brand-500' : 'text-gray-900 dark:text-white'
                             }`}>
                                 {t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? '+' : '-'}{t.amount} {t.type === 'WITHDRAW' ? 'R$' : 'PTS'}
                             </span>
@@ -226,7 +226,7 @@ export const Wallet: React.FC = () => {
                
                <div className="flex gap-4">
                   <button onClick={() => setShowDeposit(false)} className="flex-1 py-3 text-gray-500 font-bold hover:bg-gray-100 rounded-xl">Cancelar</button>
-                  <button onClick={handleDeposit} className="flex-1 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">Confirmar</button>
+                  <button onClick={handleDeposit} className="flex-1 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700">Confirmar</button>
                </div>
             </div>
          </div>
@@ -250,7 +250,7 @@ export const Wallet: React.FC = () => {
                />
                <div className="flex justify-between text-sm mb-6 bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
                   <span>Você recebe:</span>
-                  <span className="font-bold text-emerald-500">R$ {(amount / 10).toFixed(2)}</span>
+                  <span className="font-bold text-brand-500">R$ {(amount / 10).toFixed(2)}</span>
                </div>
                
                <div className="flex gap-4">
