@@ -1,7 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MediaItem, UserStats, User, Transaction, Product, MediaType, CartItem, SystemSettings, Ticket } from './types';
 import { MOCK_USERS, RADIO_STATIONS, MOCK_PRODUCTS, VIDEOS as INITIAL_VIDEOS, AUDIOS as INITIAL_AUDIOS } from './constants';
+import { supabase } from './supabaseClient';
 
 interface AppContextType {
   activeMedia: MediaItem | null;
@@ -65,13 +65,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const STORAGE_KEYS = {
   STATS: 'fluxx_db_stats_v3',
   THEME: 'fluxx_db_theme_v1',
-  USERS: 'fluxx_db_users_v1',
-  RADIOS: 'fluxx_db_radios_v2',
-  VIDEOS: 'fluxx_db_videos_v3',
-  AUDIOS: 'fluxx_db_audios_v2',
-  PRODUCTS: 'fluxx_db_products_v3',
-  CART: 'fluxx_db_cart_v1',
-  UNLOCKED_SELLERS: 'fluxx_db_unlocked_v1',
   SETTINGS: 'fluxx_db_settings_v1',
   TICKETS: 'fluxx_db_tickets_v1'
 };
@@ -123,45 +116,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch { return DEFAULT_SETTINGS; }
   });
 
-  const [users, setUsers] = useState<User[]>(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || JSON.stringify(MOCK_USERS)); } catch { return MOCK_USERS; }
-  });
-
-  const [radios, setRadios] = useState<MediaItem[]>(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.RADIOS) || JSON.stringify(RADIO_STATIONS)); } catch { return RADIO_STATIONS; }
-  });
-
-  const [videos, setVideos] = useState<MediaItem[]>(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.VIDEOS) || JSON.stringify(INITIAL_VIDEOS)); } catch { return INITIAL_VIDEOS; }
-  });
-
-  const [audios, setAudios] = useState<MediaItem[]>(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.AUDIOS) || JSON.stringify(INITIAL_AUDIOS)); } catch { return INITIAL_AUDIOS; }
-  });
-
-  const [products, setProducts] = useState<Product[]>(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.PRODUCTS) || JSON.stringify(MOCK_PRODUCTS)); } catch { return MOCK_PRODUCTS; }
-  });
-
-  const [tickets, setTickets] = useState<Ticket[]>(() => {
-     try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.TICKETS) || '[]'); } catch { return []; }
-  });
+  // Data States
+  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  const [radios, setRadios] = useState<MediaItem[]>(RADIO_STATIONS);
+  const [videos, setVideos] = useState<MediaItem[]>(INITIAL_VIDEOS);
+  const [audios, setAudios] = useState<MediaItem[]>(INITIAL_AUDIOS);
+  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
 
   const [cart, setCart] = useState<CartItem[]>(() => []);
   const [unlockedSellers, setUnlockedSellers] = useState<string[]>([]);
 
-  // Persistence
+  // --- Supabase Data Sync ---
+  useEffect(() => {
+    const fetchData = async () => {
+      // Users
+      const { data: dbUsers } = await supabase.from('users').select('*');
+      if (dbUsers && dbUsers.length > 0) setUsers(dbUsers);
+
+      // Media (Radios, Videos, Audios)
+      const { data: dbMedia } = await supabase.from('media').select('*');
+      if (dbMedia && dbMedia.length > 0) {
+        setRadios(dbMedia.filter((m: any) => m.type === 'RADIO'));
+        setVideos(dbMedia.filter((m: any) => ['VIDEO', 'SHORT', 'LIVE_TV'].includes(m.type)));
+        setAudios(dbMedia.filter((m: any) => ['AUDIO', 'PODCAST'].includes(m.type)));
+      }
+
+      // Products
+      const { data: dbProducts } = await supabase.from('products').select('*');
+      if (dbProducts && dbProducts.length > 0) setProducts(dbProducts);
+    };
+
+    fetchData();
+  }, []);
+
+  // --- Persistence (Local + Remote) ---
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.STATS, JSON.stringify(userStats)); }, [userStats]);
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.THEME, JSON.stringify(darkMode)); 
     if (darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');
   }, [darkMode]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users)); }, [users]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.RADIOS, JSON.stringify(radios)); }, [radios]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.VIDEOS, JSON.stringify(videos)); }, [videos]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.AUDIOS, JSON.stringify(audios)); }, [audios]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products)); }, [products]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(systemSettings)); }, [systemSettings]);
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.TICKETS, JSON.stringify(tickets)); }, [tickets]);
 
   // --- Logic ---
 
@@ -182,8 +175,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const processMediaReward = (media: MediaItem) => {
     // Reward Viewer
     earnProtoStream(systemSettings.rewardPerMinute, `Assistiu 60s: ${media.title}`);
+    
+    // Update View Count in DB
+    supabase.from('media').update({ views: (media.views || 0) + 1 }).eq('id', media.id).then();
 
-    // Update Media Stats
     const updateStats = (list: MediaItem[], setter: React.Dispatch<React.SetStateAction<MediaItem[]>>) => {
         setter(prev => prev.map(item => item.id === media.id ? { ...item, views: (item.views || 0) + 1, earnings: (item.earnings || 0) + systemSettings.rewardPerMinute } : item));
     };
@@ -224,7 +219,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             ...prev,
             protoStreamBalance: prev.protoStreamBalance - amountPS,
             walletBalance: prev.walletBalance + amountReal,
-            transactions: [{ id: `t-${Date.now()}`, type: 'EXCHANGE', amount: amountPS, description: `Conversão: ${amountPS} PS -> R$ ${amountReal.toFixed(2)}`, date: new Date().toISOString() }, ...prev.transactions]
+            transactions: [{ id: `t-${Date.now()}`, type: 'EXCHANGE', amount: amountPS, description: `Conversão: ${amountPS} PTS -> R$ ${amountReal.toFixed(2)}`, date: new Date().toISOString() }, ...prev.transactions]
         }));
         return true;
     }
@@ -249,18 +244,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addProduct = (newProduct: Omit<Product, 'id' | 'rating'>): boolean => {
     if (userStats.protoStreamBalance < systemSettings.adCost) return false;
+    
+    // Deduct fee
     setUserStats(prev => ({
         ...prev,
         protoStreamBalance: prev.protoStreamBalance - systemSettings.adCost,
         transactions: [{ id: `t-${Date.now()}`, type: 'SPEND', amount: systemSettings.adCost, description: 'Taxa de Anúncio', date: new Date().toISOString() }, ...prev.transactions]
     }));
+
     const product: Product = { ...newProduct, id: `p-${Date.now()}`, rating: 0, isNew: true, soldCount: 0, status: 'pending', seller: { id: CURRENT_USER_ID, name: 'Você', avatar: 'https://i.pravatar.cc/150?u=me', rating: 5, contactInfo: 'Desbloqueado' } };
+    
+    // Optimistic Update
     setProducts(prev => [product, ...prev]);
+    
+    // DB Update
+    supabase.from('products').insert([product]).then(({ error }) => {
+        if (error) console.error('Supabase Product Error:', error);
+    });
+    
     return true;
   };
 
-  const deleteProduct = (id: string) => setProducts(prev => prev.filter(p => p.id !== id));
-  const approveProduct = (id: string, status: 'approved' | 'rejected') => setProducts(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+  const deleteProduct = (id: string) => {
+      setProducts(prev => prev.filter(p => p.id !== id));
+      supabase.from('products').delete().eq('id', id).then();
+  };
+  
+  const approveProduct = (id: string, status: 'approved' | 'rejected') => {
+      setProducts(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+      supabase.from('products').update({ status }).eq('id', id).then();
+  };
 
   const unlockShop = (): boolean => {
     if (userStats.protoStreamBalance >= systemSettings.shopUnlockCost) {
@@ -285,20 +298,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addMedia = (media: Omit<MediaItem, 'id'>) => {
       const newItem: MediaItem = { ...media, id: `m-${Date.now()}`, ownerId: CURRENT_USER_ID, views: 0, earnings: 0, status: 'pending' };
+      
+      // Optimistic
       if (media.type === MediaType.VIDEO || media.type === MediaType.SHORT || media.type === MediaType.LIVE_TV) setVideos(prev => [newItem, ...prev]);
       else if (media.type === MediaType.AUDIO || media.type === MediaType.PODCAST) setAudios(prev => [newItem, ...prev]);
+
+      // DB
+      supabase.from('media').insert([newItem]).then(({error}) => {
+          if(error) console.error("Supabase Media Error", error);
+      });
   };
 
-  const deleteMedia = (id: string) => { setVideos(prev => prev.filter(v => v.id !== id)); setAudios(prev => prev.filter(a => a.id !== id)); };
+  const deleteMedia = (id: string) => { 
+      setVideos(prev => prev.filter(v => v.id !== id)); 
+      setAudios(prev => prev.filter(a => a.id !== id));
+      supabase.from('media').delete().eq('id', id).then();
+  };
+  
   const approveMedia = (id: string, status: 'approved' | 'rejected') => {
       setVideos(prev => prev.map(v => v.id === id ? { ...v, status } : v));
       setAudios(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+      supabase.from('media').update({ status }).eq('id', id).then();
   };
 
   // Admin User Logic
-  const addUser = (u: any) => setUsers(prev => [...prev, { ...u, id: `u-${Date.now()}` }]);
-  const updateUser = (id: string, u: any) => setUsers(prev => prev.map(x => x.id === id ? { ...x, ...u } : x));
-  const deleteUser = (id: string) => setUsers(prev => prev.filter(x => x.id !== id));
+  const addUser = (u: any) => {
+      const newUser = { ...u, id: `u-${Date.now()}` };
+      setUsers(prev => [...prev, newUser]);
+      supabase.from('users').insert([newUser]).then();
+  };
+  
+  const updateUser = (id: string, u: any) => {
+      setUsers(prev => prev.map(x => x.id === id ? { ...x, ...u } : x));
+      supabase.from('users').update(u).eq('id', id).then();
+  };
+  
+  const deleteUser = (id: string) => {
+      setUsers(prev => prev.filter(x => x.id !== id));
+      supabase.from('users').delete().eq('id', id).then();
+  };
   
   const adminAdjustBalance = (userId: string, amount: number, type: 'PS' | 'REAL', reason: string) => {
       setUsers(prev => prev.map(u => {
@@ -320,11 +358,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               transactions: [{ id: `t-adj-${Date.now()}`, type: 'ADJUSTMENT', amount: amount, description: `Ajuste Admin: ${reason}`, date: new Date().toISOString() }, ...prev.transactions]
           }));
       }
+      
+      // Update Supabase
+      supabase.from('users').select('*').eq('id', userId).single().then(({data}) => {
+          if(data) {
+             const updates = type === 'PS' 
+                ? { protoStreamBalance: data.protoStreamBalance + amount }
+                : { walletBalance: data.walletBalance + amount };
+             supabase.from('users').update(updates).eq('id', userId).then();
+          }
+      });
   };
 
-  const addRadio = (r: any) => setRadios(prev => [{ ...r, id: `r-${Date.now()}` }, ...prev]);
-  const updateRadio = (id: string, r: any) => setRadios(prev => prev.map(x => x.id === id ? { ...x, ...r } : x));
-  const deleteRadio = (id: string) => setRadios(prev => prev.filter(x => x.id !== id));
+  const addRadio = (r: any) => {
+      const newRadio = { ...r, id: `r-${Date.now()}`, type: MediaType.RADIO };
+      setRadios(prev => [newRadio, ...prev]);
+      supabase.from('media').insert([newRadio]).then();
+  };
+
+  const updateRadio = (id: string, r: any) => {
+      setRadios(prev => prev.map(x => x.id === id ? { ...x, ...r } : x));
+      supabase.from('media').update(r).eq('id', id).then();
+  };
+
+  const deleteRadio = (id: string) => {
+      setRadios(prev => prev.filter(x => x.id !== id));
+      supabase.from('media').delete().eq('id', id).then();
+  };
 
   // Support
   const resolveTicket = (id: string) => setTickets(prev => prev.map(t => t.id === id ? { ...t, status: 'Resolved' } : t));

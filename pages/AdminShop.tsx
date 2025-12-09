@@ -71,7 +71,7 @@ export const AdminShop: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-bold text-brand-600 dark:text-brand-400">{product.price} PS</div>
+                      <div className="text-sm font-bold text-brand-600 dark:text-brand-400">{product.price} PTS</div>
                       <div className="text-xs text-gray-400">R$ {(product.price / 10).toFixed(2)}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

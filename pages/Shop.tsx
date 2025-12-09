@@ -27,7 +27,7 @@ export const Shop: React.FC = () => {
 
   // Cart Calculations
   const cartTotalPS = cart.reduce((acc, item) => acc + item.price, 0);
-  const cartTotalReal = (cartTotalPS / 10).toFixed(2); // 100 PS = R$ 10.00 -> 10 PS = R$ 1.00
+  const cartTotalReal = (cartTotalPS / 10).toFixed(2); // 100 PTS = R$ 10.00 -> 10 PTS = R$ 1.00
 
   // Shop Slider Rotation
   useEffect(() => {
@@ -49,7 +49,7 @@ export const Shop: React.FC = () => {
 
   const handleBuy = (product: Product) => {
     if (userStats.protoStreamBalance >= product.price) {
-        if(window.confirm(`Buy ${product.name} for ${product.price} PS?`)) {
+        if(window.confirm(`Buy ${product.name} for ${product.price} PTS?`)) {
             buyProduct(product);
             alert("Purchase successful!");
             setSelectedProduct(null);
@@ -63,7 +63,7 @@ export const Shop: React.FC = () => {
      if (unlockSellerContact(product.id)) {
         alert("Contact Unlocked!");
      } else {
-        alert("Insufficient Proto Stream balance (100 PS required)!");
+        alert("Insufficient Proto Stream balance (100 PTS required)!");
      }
   };
 
@@ -110,7 +110,7 @@ export const Shop: React.FC = () => {
     }
 
     if (userStats.protoStreamBalance < 100) {
-        alert("Insufficient Proto Stream balance to post an ad. You need 100 PS.");
+        alert("Insufficient Proto Stream balance to post an ad. You need 100 PTS.");
         return;
     }
 
@@ -140,7 +140,7 @@ export const Shop: React.FC = () => {
             type: 'Physical',
             images: []
         });
-        alert("Product published successfully! 100 PS fee deducted.");
+        alert("Product published successfully! 100 PTS fee deducted.");
     }
   };
 
@@ -169,12 +169,12 @@ export const Shop: React.FC = () => {
           <div className="bg-white dark:bg-dark-card p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-lg w-full max-w-sm">
              <div className="flex justify-between items-center mb-4">
                 <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">Unlock Fee</span>
-                <span className="text-xl font-bold text-brand-500">100 PS</span>
+                <span className="text-xl font-bold text-brand-500">100 PTS</span>
              </div>
              <div className="flex justify-between items-center mb-6">
                 <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">Your Balance</span>
                 <span className={`text-xl font-bold ${userStats.protoStreamBalance >= 100 ? 'text-green-500' : 'text-red-500'}`}>
-                  {userStats.protoStreamBalance} PS
+                  {userStats.protoStreamBalance} PTS
                 </span>
              </div>
              <button 
@@ -245,7 +245,7 @@ export const Shop: React.FC = () => {
             </button>
             <div className="flex items-center gap-2 bg-brand-50 dark:bg-brand-900/20 px-4 py-2 rounded-xl w-fit whitespace-nowrap">
                 <Coins className="text-brand-500" size={20} />
-                <span className="font-bold text-brand-600 dark:text-brand-400">{userStats.protoStreamBalance} PS</span>
+                <span className="font-bold text-brand-600 dark:text-brand-400">{userStats.protoStreamBalance} PTS</span>
             </div>
          </div>
       </div>
@@ -286,7 +286,7 @@ export const Shop: React.FC = () => {
 
                 <div className="mt-auto">
                    <div className="flex items-end gap-2 mb-3">
-                      <span className="text-xl font-black text-brand-500">{product.price} PS</span>
+                      <span className="text-xl font-black text-brand-500">{product.price} PTS</span>
                       <span className="text-xs text-gray-400 mb-1">≈ R$ {(product.price / 10).toFixed(2)}</span>
                    </div>
                    <button 
@@ -314,7 +314,7 @@ export const Shop: React.FC = () => {
                       <div className="flex justify-between items-center mb-6">
                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Sell an Item</h3>
                         <div className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 dark:border-orange-800">
-                           Fee: 100 PS
+                           Fee: 100 PTS
                         </div>
                       </div>
                       
@@ -433,7 +433,7 @@ export const Shop: React.FC = () => {
                                type="submit"
                                className="flex-1 py-3 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 shadow-lg shadow-brand-600/30"
                             >
-                               Publish Item (100 PS)
+                               Publish Item (100 PTS)
                             </button>
                          </div>
 
@@ -493,7 +493,7 @@ export const Shop: React.FC = () => {
                  </div>
 
                  <div className="flex items-end gap-3 mb-6 p-4 bg-gray-50 dark:bg-dark-surface rounded-xl">
-                    <span className="text-3xl font-black text-brand-500">{selectedProduct.price} PS</span>
+                    <span className="text-3xl font-black text-brand-500">{selectedProduct.price} PTS</span>
                     <span className="text-lg text-gray-400 mb-1">≈ R$ {(selectedProduct.price / 10).toFixed(2)}</span>
                  </div>
 
@@ -520,7 +520,7 @@ export const Shop: React.FC = () => {
                            onClick={() => handleUnlockContact(selectedProduct)}
                            className="w-full bg-white dark:bg-dark-card border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                         >
-                           <Lock size={16} /> Unlock Contact (100 PS)
+                           <Lock size={16} /> Unlock Contact (100 PTS)
                         </button>
                     )}
                  </div>
@@ -556,7 +556,7 @@ export const Shop: React.FC = () => {
                </div>
                <div className="flex flex-col">
                   <span className="text-xs font-medium opacity-80">Total</span>
-                  <span className="font-bold leading-none">{cartTotalPS} PS <span className="text-[10px] opacity-70">(R$ {cartTotalReal})</span></span>
+                  <span className="font-bold leading-none">{cartTotalPS} PTS <span className="text-[10px] opacity-70">(R$ {cartTotalReal})</span></span>
                </div>
             </div>
          </div>

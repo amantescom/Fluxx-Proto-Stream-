@@ -1,8 +1,6 @@
-
-
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Video, Radio, Music, ShoppingBag, Shield, Users, Wallet, LayoutDashboard, Film, Lock } from './Icons';
+import { Home, Video, Radio, Music, ShoppingBag, Shield, Users, Wallet, LayoutDashboard, Film, Lock, Tv2 } from './Icons';
 import { useApp } from '../context';
 
 const navItems = [
@@ -19,9 +17,7 @@ export const Sidebar: React.FC = () => {
   return (
     <div className="hidden lg:flex flex-col w-64 h-screen fixed left-0 top-0 bg-white dark:bg-dark-surface border-r border-gray-200 dark:border-gray-800 z-40">
       <div className="p-6 flex items-center justify-center">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-500 to-orange-500">
-          Fluxx
-        </h1>
+        <img src="https://i.imgur.com/v8p5v9X.png" alt="Fluxx Proto" className="h-12 w-auto object-contain transition-transform hover:scale-105" />
       </div>
 
       <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto">
@@ -42,7 +38,7 @@ export const Sidebar: React.FC = () => {
           </NavLink>
         ))}
         
-        {/* MANAGEMENT Section */}
+        {/* MANAGEMENT Section - Cleaned */}
         <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
           <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Management</p>
           
@@ -61,7 +57,7 @@ export const Sidebar: React.FC = () => {
           </NavLink>
 
           <NavLink
-            to="/admin/users"
+            to="/channel"
             className={({ isActive }) =>
               `flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                 isActive
@@ -70,8 +66,8 @@ export const Sidebar: React.FC = () => {
               }`
             }
           >
-            <Users size={20} />
-            <span className="font-medium">Usuários</span>
+            <Tv2 size={20} />
+            <span className="font-medium">Canal</span>
           </NavLink>
 
            <NavLink
@@ -97,9 +93,9 @@ export const Sidebar: React.FC = () => {
           </div>
           <div>
             <p className="text-sm font-semibold dark:text-white">CANAL</p>
-            <p className="text-xs text-brand-500 font-bold">{userStats.protoStreamBalance} PS</p>
+            <p className="text-xs text-brand-500 font-bold">{userStats.protoStreamBalance} PTS</p>
           </div>
-        </NavLink>
+        NavLink>
       </div>
     </div>
   );
@@ -122,6 +118,17 @@ export const MobileNav: React.FC = () => {
             <span className="text-[10px] font-bold">{item.label}</span>
           </NavLink>
       ))}
+      <NavLink
+            to="/channel"
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center space-y-1 p-2 rounded-lg ${
+                isActive ? 'text-brand-500' : 'text-gray-400 dark:text-gray-500'
+              }`
+            }
+          >
+            <Tv2 size={24} />
+            <span className="text-[10px] font-bold">Canal</span>
+      </NavLink>
       <NavLink
             to="/profile"
             className={({ isActive }) =>

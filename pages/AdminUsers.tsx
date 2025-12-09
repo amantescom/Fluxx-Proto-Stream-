@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context';
 import { User } from '../types';
-import { Search, Plus, Edit2, Trash2, CheckCircle, XCircle, Shield, Users, Award } from '../components/Icons';
+import { Search, Plus, Edit2, Trash2, CheckCircle, XCircle, Shield, Users, Award, Coins } from '../components/Icons';
 
 export const AdminUsers: React.FC = () => {
   const { users, addUser, updateUser, deleteUser } = useApp();
@@ -16,14 +16,15 @@ export const AdminUsers: React.FC = () => {
     role: 'User' as const,
     status: 'Active' as const,
     plan: 'Free' as const,
-    points: 0
+    protoStreamBalance: 0,
+    walletBalance: 0
   };
   const [formData, setFormData] = useState(initialForm);
 
   // Stats
   const totalUsers = users.length;
   const activeUsers = users.filter(u => u.status === 'Active').length;
-  const totalPoints = users.reduce((acc, curr) => acc + curr.points, 0);
+  const totalProtoStream = users.reduce((acc, curr) => acc + curr.protoStreamBalance, 0);
 
   // Filter Logic
   const filteredUsers = users.filter(u => 
@@ -46,7 +47,8 @@ export const AdminUsers: React.FC = () => {
       role: user.role,
       status: user.status,
       plan: user.plan,
-      points: user.points
+      protoStreamBalance: user.protoStreamBalance,
+      walletBalance: user.walletBalance
     });
     setIsModalOpen(true);
   };
@@ -105,11 +107,11 @@ export const AdminUsers: React.FC = () => {
         </div>
         <div className="bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center">
           <div className="p-4 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 mr-4">
-            <Award size={24} />
+            <Coins size={24} />
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Total Points</p>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{totalPoints.toLocaleString()}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Total Circulation (PTS)</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{totalProtoStream.toLocaleString()}</h3>
           </div>
         </div>
       </div>
@@ -136,9 +138,9 @@ export const AdminUsers: React.FC = () => {
               <tr className="bg-gray-50 dark:bg-dark-surface border-b border-gray-200 dark:border-gray-700">
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Plan</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Points</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Proto Stream (PTS)</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Wallet (R$)</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
@@ -166,14 +168,6 @@ export const AdminUsers: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${user.plan === 'Premium' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' : 
-                          user.plan === 'Family' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300' : 
-                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
-                        {user.plan}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                         ${user.status === 'Active' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 
                           user.status === 'Banned' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 
@@ -181,8 +175,17 @@ export const AdminUsers: React.FC = () => {
                         {user.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-mono">
-                      {user.points}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center font-mono font-bold text-gray-900 dark:text-white">
+                         <Coins size={14} className="text-yellow-500 mr-1.5" />
+                         {user.protoStreamBalance}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center font-mono text-gray-900 dark:text-white">
+                         <span className="text-xs text-gray-400 mr-1">R$</span>
+                         {user.walletBalance.toFixed(2)}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
@@ -233,7 +236,7 @@ export const AdminUsers: React.FC = () => {
                     </h3>
                     <div className="mt-6 space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                         <input 
                           type="text" 
                           value={formData.name}
@@ -242,7 +245,7 @@ export const AdminUsers: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                         <input 
                           type="email" 
                           value={formData.email}
@@ -252,7 +255,7 @@ export const AdminUsers: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Role</label>
                             <select 
                             value={formData.role}
                             onChange={(e) => setFormData({...formData, role: e.target.value as any})}
@@ -264,7 +267,7 @@ export const AdminUsers: React.FC = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Status</label>
                             <select 
                             value={formData.status}
                             onChange={(e) => setFormData({...formData, status: e.target.value as any})}
@@ -278,23 +281,21 @@ export const AdminUsers: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Plan</label>
-                            <select 
-                            value={formData.plan}
-                            onChange={(e) => setFormData({...formData, plan: e.target.value as any})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-dark-surface dark:text-white"
-                            >
-                            <option value="Free">Free</option>
-                            <option value="Premium">Premium</option>
-                            <option value="Family">Family</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Points</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Proto Stream (PTS)</label>
                             <input 
                             type="number" 
-                            value={formData.points}
-                            onChange={(e) => setFormData({...formData, points: parseInt(e.target.value) || 0})}
+                            value={formData.protoStreamBalance}
+                            onChange={(e) => setFormData({...formData, protoStreamBalance: parseInt(e.target.value) || 0})}
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-dark-surface dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Wallet (R$)</label>
+                            <input 
+                            type="number" 
+                            step="0.01"
+                            value={formData.walletBalance}
+                            onChange={(e) => setFormData({...formData, walletBalance: parseFloat(e.target.value) || 0})}
                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-dark-surface dark:text-white"
                             />
                         </div>

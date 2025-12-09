@@ -51,7 +51,7 @@ export const Wallet: React.FC = () => {
         if(exchangeProtoToReal(amount)) {
             setShowExchange(false);
             setAmount(0);
-            alert(`Sucesso! ${amount} PS convertidos em Reais.`);
+            alert(`Sucesso! ${amount} PTS convertidos em Reais.`);
         } else {
             alert("Saldo insuficiente de Proto Stream.");
         }
@@ -73,7 +73,7 @@ export const Wallet: React.FC = () => {
 
       {/* Main Balances */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Total Balance Card (Green for Money) */}
+        {/* Total Balance Card (Always Green/Emerald for Money) */}
         <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
             <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4 opacity-80">
@@ -82,7 +82,7 @@ export const Wallet: React.FC = () => {
                 </div>
                 <div className="flex items-baseline gap-2 mb-2">
                     <h2 className="text-6xl font-black">{userStats.protoStreamBalance}</h2>
-                    <span className="text-2xl font-bold opacity-80">PS</span>
+                    <span className="text-2xl font-bold opacity-80">PTS</span>
                 </div>
                 <div className="bg-white/10 inline-block px-3 py-1 rounded-lg backdrop-blur-sm mb-6">
                     <span className="font-mono font-bold">≈ R$ {totalBalanceReal}</span>
@@ -136,7 +136,7 @@ export const Wallet: React.FC = () => {
               </div>
               <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Lives & Streaming</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{earningsFromLives} PS</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{earningsFromLives} PTS</p>
               </div>
           </div>
 
@@ -147,7 +147,7 @@ export const Wallet: React.FC = () => {
               </div>
               <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Shorts & Clips</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{earningsFromShorts} PS</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{earningsFromShorts} PTS</p>
               </div>
           </div>
 
@@ -158,7 +158,7 @@ export const Wallet: React.FC = () => {
               </div>
               <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Gasto com Anúncios</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{adSpend} PS</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{adSpend} PTS</p>
               </div>
           </div>
       </div>
@@ -193,7 +193,7 @@ export const Wallet: React.FC = () => {
                             <span className={`text-lg font-bold ${
                                 t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'
                             }`}>
-                                {t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? '+' : '-'}{t.amount} {t.type === 'WITHDRAW' ? 'R$' : 'PS'}
+                                {t.type === 'EARN' || t.type === 'DEPOSIT' || t.type === 'SALE' ? '+' : '-'}{t.amount} {t.type === 'WITHDRAW' ? 'R$' : 'PTS'}
                             </span>
                         </div>
                     </div>
@@ -209,9 +209,9 @@ export const Wallet: React.FC = () => {
          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
             <div className="bg-white dark:bg-dark-card p-8 rounded-2xl w-full max-w-md shadow-2xl">
                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Recarga de Proto Stream</h2>
-               <p className="text-gray-500 mb-6">10 PS = R$ 1,00</p>
+               <p className="text-gray-500 mb-6">10 PTS = R$ 1,00</p>
                
-               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Quantidade de PS</label>
+               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Quantidade de PTS</label>
                <input 
                   type="number" 
                   value={amount}
@@ -236,10 +236,10 @@ export const Wallet: React.FC = () => {
       {showExchange && (
          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
             <div className="bg-white dark:bg-dark-card p-8 rounded-2xl w-full max-w-md shadow-2xl">
-               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Converter PS para Real</h2>
-               <p className="text-gray-500 mb-6">Converta seus ganhos para saldo de saque.<br/>10 PS = R$ 1,00</p>
+               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Converter PTS para Real</h2>
+               <p className="text-gray-500 mb-6">Converta seus ganhos para saldo de saque.<br/>10 PTS = R$ 1,00</p>
                
-               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Quantidade de PS para converter</label>
+               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Quantidade de PTS para converter</label>
                <input 
                   type="number" 
                   value={amount}

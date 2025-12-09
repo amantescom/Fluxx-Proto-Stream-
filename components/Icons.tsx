@@ -1,8 +1,7 @@
-
-
 import { 
   Home, 
   Tv, 
+  Tv2,
   Radio, 
   Mic, 
   Newspaper, 
@@ -62,11 +61,12 @@ import {
   ArrowUp,
   BarChart2,
   AlertTriangle,
-  DollarSign
+  DollarSign,
+  Clock
 } from 'lucide-react';
 
 export { 
-  Home, Tv, Radio, Mic, Newspaper, User, Play, Pause, SkipForward, SkipBack, 
+  Home, Tv, Tv2, Radio, Mic, Newspaper, User, Play, Pause, SkipForward, SkipBack, 
   Maximize2, X, Search, Bell, Settings, Award, TrendingUp, Flame, Menu, 
   Moon, Sun, Share2, Heart, Download, Volume2, 
   Edit2, Trash2, Plus, Minus, Shield, MoreVertical, CheckCircle, XCircle, Users, 
@@ -76,5 +76,6 @@ export {
   ArrowDown, ArrowUp,
   BarChart2,
   AlertTriangle,
-  DollarSign
+  DollarSign,
+  Clock
 };

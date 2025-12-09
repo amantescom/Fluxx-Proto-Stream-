@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Bell, Sun, Moon } from './Icons';
+import { Search, Bell, Sun, Moon, Coins } from './Icons';
 import { useApp } from '../context';
 
 export const Header: React.FC = () => {
@@ -8,7 +8,9 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 lg:px-8">
       {/* Mobile Logo Placeholder (Only visible on small screens) */}
-      <div className="lg:hidden font-bold text-xl text-brand-500">Fluxx</div>
+      <div className="lg:hidden flex items-center">
+        <img src="https://i.imgur.com/v8p5v9X.png" alt="Fluxx Proto" className="h-8 w-auto object-contain" />
+      </div>
 
       {/* Search Bar */}
       <div className="flex-1 max-w-xl mx-4 lg:mx-0">
@@ -38,9 +40,11 @@ export const Header: React.FC = () => {
           <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-brand-500 ring-2 ring-white dark:ring-dark-bg"></span>
         </button>
 
-        <div className="hidden md:flex items-center bg-brand-50 dark:bg-brand-900/20 px-3 py-1 rounded-full border border-brand-100 dark:border-brand-900/50">
-          <span className="text-xs font-bold text-brand-600 dark:text-brand-400 mr-1">{userStats.points}</span>
-          <span className="text-[10px] uppercase font-bold text-brand-400 tracking-wider">PTS</span>
+        {/* Balance Display: Always Green/Emerald for Money context */}
+        <div className="hidden md:flex items-center bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <Coins size={14} className="text-emerald-500 mr-1.5" />
+          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mr-1">{userStats.protoStreamBalance}</span>
+          <span className="text-[10px] uppercase font-bold text-emerald-500 tracking-wider">PTS</span>
         </div>
       </div>
     </header>

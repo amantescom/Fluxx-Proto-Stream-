@@ -15,17 +15,22 @@ export const Profile: React.FC = () => {
   
   // Upload State
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [newMedia, setNewMedia] = useState({ title: '', category: 'Humor', file: '' });
+  const [newMedia, setNewMedia] = useState({ 
+    title: '', 
+    category: 'Humor', 
+    file: '',
+    type: MediaType.SHORT as MediaType 
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Filter Data for Current User (Static ID: u-me)
-  const myShorts = videos.filter(v => v.ownerId === 'u-me' && v.type === MediaType.SHORT);
+  const myContent = videos.filter(v => v.ownerId === 'u-me');
   const myProducts = products.filter(p => p.seller.id === 'u-me');
   const myPurchases = userStats.transactions.filter(t => t.type === 'PURCHASE');
   
   // Total Earnings Stats
-  const totalViews = myShorts.reduce((acc, curr) => acc + (curr.views || 0), 0);
-  const totalContentEarnings = myShorts.reduce((acc, curr) => acc + (curr.earnings || 0), 0);
+  const totalViews = myContent.reduce((acc, curr) => acc + (curr.views || 0), 0);
+  const totalContentEarnings = myContent.reduce((acc, curr) => acc + (curr.earnings || 0), 0);
   const totalSalesEarnings = userStats.transactions
     .filter(t => t.type === 'SALE')
     .reduce((acc, curr) => acc + curr.amount, 0);
@@ -40,7 +45,7 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const handlePostShort = (e: React.FormEvent) => {
+  const handlePostMedia = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMedia.title || !newMedia.file) {
       alert("Please provide a title and video file.");
@@ -49,16 +54,16 @@ export const Profile: React.FC = () => {
 
     addMedia({
       title: newMedia.title,
-      type: MediaType.SHORT,
+      type: newMedia.type,
       category: newMedia.category,
-      url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', // Mock URL since we can't really host the base64 video efficiently in localstorage
-      thumbnail: 'https://picsum.photos/200/350?random=' + Math.floor(Math.random() * 1000),
+      url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', // Mock URL
+      thumbnail: 'https://picsum.photos/300/200?random=' + Math.floor(Math.random() * 1000),
       author: 'Você',
       isLive: false
     });
     setIsUploadModalOpen(false);
-    setNewMedia({ title: '', category: 'Humor', file: '' });
-    alert("Short postado com sucesso! Ganhos automáticos ativados.");
+    setNewMedia({ title: '', category: 'Humor', file: '', type: MediaType.SHORT });
+    alert("Conteúdo postado com sucesso! Ganhos automáticos ativados.");
   };
 
   const renderOverview = () => (
@@ -68,7 +73,7 @@ export const Profile: React.FC = () => {
          <div className="bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-brand-100 dark:border-brand-900/30 relative overflow-hidden">
              <div className="relative z-10">
                  <p className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-2">Saldo Total</p>
-                 <h2 className="text-4xl font-black text-brand-600 dark:text-brand-500">{userStats.protoStreamBalance} PS</h2>
+                 <h2 className="text-4xl font-black text-brand-600 dark:text-brand-500">{userStats.protoStreamBalance} PTS</h2>
                  <p className="text-xs text-gray-400 mt-2">Ganho por Interações & Vendas</p>
              </div>
              <Coins className="absolute bottom-4 right-4 text-brand-100 dark:text-brand-900/20" size={64} />
@@ -106,7 +111,7 @@ export const Profile: React.FC = () => {
                         <p className="text-xs text-gray-500">{new Date(t.date).toLocaleDateString()}</p>
                     </div>
                     <span className={`font-bold ${t.type === 'EARN' || t.type === 'SALE' ? 'text-green-500' : 'text-gray-900 dark:text-white'}`}>
-                        {t.type === 'EARN' || t.type === 'SALE' ? '+' : '-'}{t.amount} PS
+                        {t.type === 'EARN' || t.type === 'SALE' ? '+' : '-'}{t.amount} PTS
                     </span>
                 </div>
             ))}
@@ -119,14 +124,14 @@ export const Profile: React.FC = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex justify-between items-center">
             <div>
-                <h2 className="text-2xl font-bold dark:text-white">Gerenciar Shorts</h2>
-                <p className="text-gray-500">Poste conteúdo e ganhe 10 PS a cada 60s de visualização.</p>
+                <h2 className="text-2xl font-bold dark:text-white">Gerenciar Conteúdo</h2>
+                <p className="text-gray-500">Poste vídeos ou shorts e ganhe 10 PTS a cada 60s de visualização.</p>
             </div>
             <button 
                 onClick={() => setIsUploadModalOpen(true)}
                 className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 shadow-lg"
             >
-                <Plus size={20} /> Postar Short
+                <Plus size={20} /> Postar Novo
             </button>
         </div>
 
@@ -143,35 +148,38 @@ export const Profile: React.FC = () => {
                 <div className="p-3 bg-white dark:bg-dark-card rounded-full text-green-600"><Coins size={24} /></div>
                 <div>
                     <p className="text-sm font-bold text-gray-500 dark:text-gray-400">Ganhos com Conteúdo</p>
-                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">{totalContentEarnings} PS</h3>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">{totalContentEarnings} PTS</h3>
                 </div>
             </div>
         </div>
 
         {/* List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myShorts.length > 0 ? myShorts.map(short => (
-                <div key={short.id} className="bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700">
-                    <div className="relative aspect-[9/16] bg-gray-200">
-                        <img src={short.thumbnail} className="w-full h-full object-cover" />
-                        <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded font-bold">
-                            {short.views || 0} Views
+            {myContent.length > 0 ? myContent.map(item => (
+                <div key={item.id} className="bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700">
+                    <div className={`relative ${item.type === MediaType.SHORT ? 'aspect-[9/16]' : 'aspect-video'} bg-gray-200`}>
+                        <img src={item.thumbnail} className="w-full h-full object-cover" />
+                        <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded font-bold uppercase">
+                            {item.type}
                         </div>
                     </div>
                     <div className="p-4">
-                        <h4 className="font-bold dark:text-white truncate">{short.title}</h4>
+                        <h4 className="font-bold dark:text-white truncate">{item.title}</h4>
                         <div className="flex justify-between items-center mt-2">
-                            <span className="text-green-500 font-bold text-sm">+{short.earnings || 0} PS</span>
-                            <button onClick={() => deleteMedia(short.id)} className="text-red-400 hover:text-red-600">
-                                <Trash2 size={18} />
-                            </button>
+                            <span className="text-green-500 font-bold text-sm">+{item.earnings || 0} PTS</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 text-xs">{item.views} views</span>
+                                <button onClick={() => deleteMedia(item.id)} className="text-red-400 hover:text-red-600">
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             )) : (
                 <div className="col-span-full text-center py-12 text-gray-500 bg-gray-50 dark:bg-dark-card rounded-xl">
                     <Film size={48} className="mx-auto mb-2 opacity-50" />
-                    <p>Você ainda não postou nenhum Short.</p>
+                    <p>Você ainda não postou nenhum conteúdo.</p>
                 </div>
             )}
         </div>
@@ -183,7 +191,7 @@ export const Profile: React.FC = () => {
          <div className="flex justify-between items-center">
             <div>
                 <h2 className="text-2xl font-bold dark:text-white">Meus Anúncios</h2>
-                <p className="text-gray-500">Gerencie seus produtos à venda. Custo por anúncio: 100 PS.</p>
+                <p className="text-gray-500">Gerencie seus produtos à venda. Custo por anúncio: 100 PTS.</p>
             </div>
             {/* The actual button is in the Shop page, but we could link there */}
         </div>
@@ -193,7 +201,7 @@ export const Profile: React.FC = () => {
             <div className="flex items-center gap-4">
                 <div className="p-4 bg-white dark:bg-dark-card rounded-full text-orange-600"><ShoppingBag size={32} /></div>
                 <div>
-                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">{totalSalesEarnings} PS</h3>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">{totalSalesEarnings} PTS</h3>
                     <p className="text-sm font-bold text-gray-500 dark:text-gray-400">Total em Vendas</p>
                 </div>
             </div>
@@ -211,7 +219,7 @@ export const Profile: React.FC = () => {
                     <div className="flex-1">
                         <div className="flex justify-between">
                             <h4 className="font-bold text-lg dark:text-white">{p.name}</h4>
-                            <span className="font-bold text-brand-500">{p.price} PS</span>
+                            <span className="font-bold text-brand-500">{p.price} PTS</span>
                         </div>
                         <p className="text-sm text-gray-500 line-clamp-1">{p.description}</p>
                         <div className="flex items-center gap-4 mt-2 text-xs font-bold text-gray-400">
@@ -250,7 +258,7 @@ export const Profile: React.FC = () => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <span className="block font-bold text-gray-900 dark:text-white mb-1">-{t.amount} PS</span>
+                        <span className="block font-bold text-gray-900 dark:text-white mb-1">-{t.amount} PTS</span>
                         <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">Concluído</span>
                     </div>
                 </div>
@@ -308,12 +316,24 @@ export const Profile: React.FC = () => {
       {activeTab === 'shop' && renderShopManager()}
       {activeTab === 'purchases' && renderPurchases()}
 
-      {/* Upload Modal (Shorts Only) */}
+      {/* Upload Modal (Universal for Video/Short) */}
       {isUploadModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
              <div className="bg-white dark:bg-dark-card p-6 rounded-2xl w-full max-w-md shadow-2xl">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Postar Novo Short</h3>
-                <form onSubmit={handlePostShort} className="space-y-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Postar Novo Conteúdo</h3>
+                <form onSubmit={handlePostMedia} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Tipo de Conteúdo</label>
+                        <select 
+                            value={newMedia.type}
+                            onChange={(e) => setNewMedia({...newMedia, type: e.target.value as MediaType})}
+                            className="w-full px-3 py-2 border rounded-lg dark:bg-dark-surface dark:border-gray-600 dark:text-white"
+                        >
+                            <option value={MediaType.SHORT}>Short (Vídeo Curto)</option>
+                            <option value={MediaType.VIDEO}>Vídeo (Longo)</option>
+                        </select>
+                    </div>
+
                     <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Título</label>
                         <input 
@@ -335,6 +355,9 @@ export const Profile: React.FC = () => {
                             <option>Dança</option>
                             <option>Esportes</option>
                             <option>Vlog</option>
+                            <option>Educação</option>
+                            <option>Gameplay</option>
+                            <option>Música</option>
                         </select>
                     </div>
                     <div>
