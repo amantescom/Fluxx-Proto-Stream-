@@ -1,5 +1,6 @@
 
 
+
 export enum MediaType {
   VIDEO = 'VIDEO',
   LIVE_TV = 'LIVE_TV',
@@ -115,6 +116,47 @@ export interface ShippingAddress {
   state: string;
   zipCode: string;
   complement?: string;
+}
+
+export interface PlatformConnection {
+  id: string;
+  name: 'Facebook' | 'Instagram' | 'YouTube' | 'TikTok' | 'Kwai' | 'Twitch' | 'Custom RTMP';
+  icon: string; // Icon name reference
+  connected: boolean;
+  rtmpUrl?: string;
+  streamKey?: string;
+}
+
+export interface LiveStreamSession {
+  id: string;
+  title: string;
+  thumbnail: string;
+  startTime: string;
+  endTime?: string;
+  status: 'live' | 'ended';
+  viewers: number;
+  platforms: string[]; // List of platform names
+  earnings: number;
+}
+
+// Chat Aggregator Schema
+export interface ChatMessage {
+  id: string;
+  plataforma: 'YouTube' | 'Facebook' | 'Instagram' | 'TikTok' | 'Kwai' | 'RTMP' | 'Fluxx Stream';
+  canal_id: string;
+  usuario: string;
+  usuario_id: string;
+  avatar: string | null;
+  mensagem: string;
+  hora_utc: string;
+  lingua: string;
+  meta: {
+    like_count: number;
+    superchat: boolean;
+    reacao: string | null;
+    priority: 'normal' | 'alta' | 'sistema';
+    amount?: number; // For superchats
+  };
 }
 
 // Admin System Types

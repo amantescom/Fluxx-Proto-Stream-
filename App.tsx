@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './context';
@@ -13,10 +14,16 @@ import { Radio } from './pages/Radio';
 import { News } from './pages/News';
 import { Profile } from './pages/Profile';
 import { Shop } from './pages/Shop';
+import { Channel } from './pages/Channel';
 import { AdminUsers } from './pages/AdminUsers';
 import { AdminRadios } from './pages/AdminRadios';
 import { Wallet } from './pages/Wallet';
 import { AdminDashboard } from './pages/AdminDashboard';
+// New Pages
+import { Shorts } from './pages/Shorts';
+import { Podcasts } from './pages/Podcasts';
+import { Interviews } from './pages/Interviews';
+import { About } from './pages/About';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -47,11 +54,17 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/videos" element={<Videos />} />
             <Route path="/audios" element={<Audios />} />
+            <Route path="/reels" element={<Shorts />} />
+            <Route path="/podcasts" element={<Podcasts />} />
+            <Route path="/interviews" element={<Interviews />} />
+            <Route path="/about" element={<About />} />
+            
+            <Route path="/channel" element={<Channel />} />
             <Route path="/radio" element={<Radio />} />
             <Route path="/news" element={<News />} />
-            <Route path="/shop" element={<Shop />} />
             <Route path="/profile" element={<Profile />} />
             
             {/* Management Routes */}

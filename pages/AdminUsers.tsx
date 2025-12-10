@@ -13,11 +13,12 @@ export const AdminUsers: React.FC = () => {
   const initialForm = {
     name: '',
     email: '',
-    role: 'User' as const,
-    status: 'Active' as const,
-    plan: 'Free' as const,
+    role: 'User' as User['role'],
+    status: 'Active' as User['status'],
+    plan: 'Free' as User['plan'],
     protoStreamBalance: 0,
-    walletBalance: 0
+    walletBalance: 0,
+    points: 0
   };
   const [formData, setFormData] = useState(initialForm);
 
@@ -48,7 +49,8 @@ export const AdminUsers: React.FC = () => {
       status: user.status,
       plan: user.plan,
       protoStreamBalance: user.protoStreamBalance,
-      walletBalance: user.walletBalance
+      walletBalance: user.walletBalance,
+      points: user.points
     });
     setIsModalOpen(true);
   };
@@ -299,6 +301,15 @@ export const AdminUsers: React.FC = () => {
                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-dark-surface dark:text-white"
                             />
                         </div>
+                      </div>
+                      <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Points</label>
+                          <input 
+                          type="number" 
+                          value={formData.points}
+                          onChange={(e) => setFormData({...formData, points: parseInt(e.target.value) || 0})}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-dark-surface dark:text-white"
+                          />
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useApp } from '../context';
 import { LIVE_CHANNELS, VIDEOS, AUDIOS, PODCASTS, HERO_SLIDES } from '../constants';
 import { Play, Radio, Video, Star, Flame, Headphones } from '../components/Icons';
@@ -9,13 +10,13 @@ export const Home: React.FC = () => {
   const { playMedia, radios } = useApp();
 
   // Helper to render a horizontal scrollable section
-  const renderSection = (title: string, icon: React.ReactNode, items: MediaItem[], colorClass: string = "text-gray-900 dark:text-white") => (
+  const renderSection = (title: string, icon: React.ReactNode, items: MediaItem[], linkTo: string, colorClass: string = "text-gray-900 dark:text-white") => (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4 px-1">
          <h2 className={`text-lg font-bold flex items-center gap-2 ${colorClass}`}>
             {icon} {title}
          </h2>
-         <span className="text-xs font-bold text-brand-500 cursor-pointer hover:underline">View All</span>
+         <Link to={linkTo} className="text-xs font-bold text-brand-500 cursor-pointer hover:underline">View All</Link>
       </div>
       <div className="flex overflow-x-auto gap-4 no-scrollbar pb-4 pl-1">
          {items.map((item) => (
@@ -67,42 +68,48 @@ export const Home: React.FC = () => {
            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
         </div>, 
-        LIVE_CHANNELS
+        LIVE_CHANNELS,
+        "/channel"
       )}
 
       {/* 4. Melhores Streamings */}
       {renderSection(
         "Melhores Streamings", 
         <Star size={20} className="text-yellow-500 fill-yellow-500" />, 
-        [...HERO_SLIDES, ...LIVE_CHANNELS, ...VIDEOS].sort(() => 0.5 - Math.random()) // Randomize for variety
+        [...HERO_SLIDES, ...LIVE_CHANNELS, ...VIDEOS].sort(() => 0.5 - Math.random()),
+        "/videos"
       )}
 
       {/* 5. Novidades */}
       {renderSection(
         "Novidades", 
         <Flame size={20} className="text-orange-500 fill-orange-500" />, 
-        [...VIDEOS, ...AUDIOS].reverse() // Show newest (bottom of list) first
+        [...VIDEOS, ...AUDIOS].reverse(),
+        "/channel"
       )}
 
       {/* 6. Radios */}
       {renderSection(
         "Rádios", 
         <Radio size={20} className="text-blue-500" />, 
-        radios
+        radios,
+        "/radio"
       )}
 
       {/* 7. Videos */}
       {renderSection(
         "Vídeos", 
         <Video size={20} className="text-purple-500" />, 
-        VIDEOS
+        VIDEOS,
+        "/videos"
       )}
 
       {/* 8. Audios */}
       {renderSection(
         "Áudios", 
         <Headphones size={20} className="text-pink-500" />, 
-        [...AUDIOS, ...PODCASTS]
+        [...AUDIOS, ...PODCASTS],
+        "/audios"
       )}
 
     </div>

@@ -1,5 +1,6 @@
 
 
+
 import { MediaItem, MediaType, NewsItem, Mission, User, Product } from './types';
 
 // ... (Keep existing HERO_SLIDES, FEATURED_CREATORS, TV_CHANNELS, LIVES_LIST, VIDEO_PODCASTS, INTERVIEWS_LIST, SHORTS_LIST, VLOGS_LIST, RADIO_STATIONS, LIVE_CHANNELS, VIDEOS, AUDIOS, PODCASTS, MOCK_FEED, DAILY_MISSIONS, MOCK_USERS, MOCK_NEWS - NO CHANGES NEEDED ABOVE, JUST RE-EXPORT THEM OR KEEP THEM IN FILE)
@@ -178,7 +179,7 @@ export const VIDEO_PODCASTS: MediaItem[] = [
   { id: 'pod-podpah', title: 'Podpah com Neymar', subtitle: 'A Resenha Lendária', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=302', url: '', category: 'Entrevistas', author: 'Podpah' },
   { id: 'pod-flow', title: 'Flow Podcast', subtitle: 'Conversa Livre', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=303', url: '', category: 'Entrevistas', author: 'Flow' },
   { id: 'pod-naoouvo', title: 'Não Ouvo', subtitle: 'Bancada do Humor', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=304', url: '', category: 'Humor', author: 'Cid Cidoso' },
-  { id: 'pod-hipsters', title: 'Hipsters Ponto Tech', subtitle: 'O Futuro da AI', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=305', url: '', category: 'Tech', author: 'Alura' },
+  { id: 'pod-hipsters', title: 'Hipsters Ponto Tech', subtitle: 'O Futuro da Tech', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=305', url: '', category: 'Tech', author: 'Alura' },
   { id: 'pod-nerdcast', title: 'NerdCast Stories', subtitle: 'RPG de Ghanor', type: MediaType.VIDEO, thumbnail: 'https://picsum.photos/300/200?random=306', url: '', category: 'Geek', author: 'Jovem Nerd' },
 ];
 
@@ -222,7 +223,7 @@ export const AUDIOS: MediaItem[] = [
   { id: 'aud-2', title: 'Urban Beats', subtitle: 'Album', type: MediaType.AUDIO, thumbnail: 'https://picsum.photos/200/200?random=31', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3', category: 'Music', author: 'DJ Cool', likes: 120 },
 ];
 export const PODCASTS: MediaItem[] = [
-  { id: 'pod-1', title: 'Tech Talk Daily', subtitle: 'Ep 405: AI Revolution', type: MediaType.PODCAST, thumbnail: 'https://picsum.photos/200/200?random=11', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', category: 'Technology', author: 'Tech Guys' },
+  { id: 'pod-1', title: 'Tech Talk Daily', subtitle: 'Ep 405: Tech Revolution', type: MediaType.PODCAST, thumbnail: 'https://picsum.photos/200/200?random=11', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', category: 'Technology', author: 'Tech Guys' },
   { id: 'pod-2', title: 'True Crime Files', subtitle: 'The Missing Key', type: MediaType.PODCAST, thumbnail: 'https://picsum.photos/200/200?random=12', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3', category: 'True Crime', author: 'Crime Network' },
 ];
 
@@ -338,8 +339,8 @@ export const MOCK_USERS: User[] = [
 export const MOCK_NEWS: NewsItem[] = [
   { 
     id: 'n-1', 
-    title: 'New AI Model Revolutionizes Content Creation', 
-    summary: 'The latest AI tools are making it easier than ever for creators to produce high-quality videos and art.', 
+    title: 'New Tech Model Revolutionizes Content Creation', 
+    summary: 'The latest tools are making it easier than ever for creators to produce high-quality videos and art.', 
     category: 'Technology', 
     imageUrl: 'https://picsum.photos/600/400?random=50', 
     timestamp: '2 hours ago', 
